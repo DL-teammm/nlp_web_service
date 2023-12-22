@@ -73,7 +73,7 @@ def build_page():
 
     with row1_1:
         st.markdown(
-            " "
+            "Service without model"
         )
         st.markdown(
             ""
