@@ -33,7 +33,9 @@ def input_data(samples_path: str = 'samples_resume', user_path: str = 'user_resu
         st.write('You selected:', resume)
 
         if uploaded_file is not None:
-            resume_path = pd.read_csv(f'./{user_path}/{uploaded_file.name}')
+            resume_path = resume_path = os.path.join(
+                user_path, uploaded_file.name,
+            )
         elif uploaded_file is None and resume is not None:
             resume_path = os.path.join(
                 samples_path, f'{resume}.csv',
@@ -55,27 +57,20 @@ def show_chain_results(input_path: str, results_path: str = "results"):
 
     with st.spinner('Chain inference...'):
         recommended_vacancies = chain.infer()
-        save_uploaded_file(recommended_vacancies, results_path)
+        df = pd.DataFrame()
+        for recommended_vacancy in recommended_vacancies:
+            df_vac = pd.DataFrame(recommended_vacancy['vac_info'], index=[0])
+            df = pd.concat([df, df_vac], axis=0)
 
     st.header('Recommended vacancies:')
 
-    df = pd.read_csv(f'./{results_path}/{recommended_vacancies.name}')
-    columns = [
-        'vacancy_name',
-        'code_professional_sphere',
-        'busy_type',
-        'regionName',
-        'salary',
-        'schedule_type',
-        'vacancy_address',
-        'position_requirements',
-        'position_responsibilities'
-    ]
+    columns = ['additional_requirements', 'busy_type', 'languageKnowledge', 'education', 'education_speciality',
+               'hardSkills', 'softSkills', 'position_requirements', 'position_responsibilities',
+               'regionName', 'required_drive_license', 'salary', 'salary_min', 'salary_max', 'schedule_type',
+               'vacancy_name', 'professionalSphereName']
     df.to_csv('./results/filtered_vacancies.csv', columns=columns, index=False)
 
-    new_df = pd.read_csv("./results/filtered_vacancies.csv")
-
-    st.write(new_df)
+    st.write(df[columns])
 
 
 def build_page():

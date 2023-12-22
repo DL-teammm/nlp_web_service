@@ -8,9 +8,9 @@ from variables import *
 class Chain:
     def __init__(self, input_cv_path: str):
         columns = ['title', 'city', 'area', 'desired_wage', 'education_level', 'languages', 'skills', 'about']
-        df_cv = pd.read_csv(input_cv_path)[columns].iloc[0]
+        df_cv = pd.read_csv(input_cv_path)[columns]
 
-        line = ' '.join([str(item) for item in df_cv.values]).lower()
+        line = ' '.join([str(item) for item in df_cv.values[0]]).lower()
         cv_doc = tokenize(line, stopwords=sw, need_lemmatize=True)
         self.cv_emb = vectorize(fasttext, [cv_doc], vector_size=300)[0]
 
@@ -33,6 +33,6 @@ class Chain:
 
 
 if __name__ == '__main__':
-    chain = Chain(input_cv_path='./test_vacs_cvs/resumes.csv') # внутри - обработка только первой файла-csv
+    chain = Chain(input_cv_path='./test_vacs_cvs/resumes.csv')
     out = chain.infer()
     print(out)
