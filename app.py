@@ -45,11 +45,7 @@ def save_uploaded_file(uploaded_file, user_resume):
     return st.success("Saved File: {} to user_resume".format(uploaded_file.name))
 
 
-def show_chain_results(
-# input_video_path: str
-):
-    # with st.spinner('Chain inference...'):
-    #     vacancies = chain.infer()
+def show_chain_results():
 
     st.header('Recommended vacancies:')
 
@@ -83,7 +79,7 @@ def build_page():
             ""
         )
 
-    resume_path = input_data()
+    input_data()
 
     show_chain_results()
 
